@@ -4,7 +4,7 @@ function UserProfile() {
   return (
    <>
     <div>UserProfile</div>
-    <h1>UserProfile</h1>
+  
    </>
   )
 }
