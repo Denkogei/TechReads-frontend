@@ -3,13 +3,13 @@ import { FaHeart, FaShoppingCart, FaUser } from "react-icons/fa";
 const Navbar = () => {
   return (
     <nav className="bg-white shadow-md px-6 flex items-center justify-between h-24">
-      {/* Logo: Increased size with NO gap */}
+      
       <div className="flex items-center space-x-1">
-        <span className="text-blue-900 text-4xl">📖</span> {/* Increased size */}
-        <h1 className="text-2xl font-semibold">TechReads</h1> {/* No extra margin */}
+        <span className="text-blue-900 text-4xl">📖</span> 
+        <h1 className="text-2xl font-semibold">TechReads</h1> 
       </div>
 
-      {/* Icons & Search Bar (Search next to icons on right) */}
+      
       <div className="flex items-center space-x-4">
         <input
           type="text"
