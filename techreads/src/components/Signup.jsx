@@ -4,13 +4,13 @@ import * as Yup from "yup";
 
 function Signup() {
   const initialValues = {
-    username: "",
+    name: "",
     email: "",
     password: "",
   };
 
   const validationSchema = Yup.object({
-    username: Yup.string()
+    name: Yup.string()
       .min(3, "Must be at least 3 characters")
       .required("Username is required"),
     email: Yup.string()
@@ -52,10 +52,10 @@ function Signup() {
         {({ isSubmitting, errors, touched }) => (
           <Form>
             <div>
-              <label>Username:</label>
-              <Field type="text" name="username" />
-              {errors.username && touched.username && (
-                <div className="error">{errors.username}</div>
+              <label>name:</label>
+              <Field type="text" name="name" />
+              {errors.name && touched.name && (
+                <div className="error">{errors.name}</div>
               )}
             </div>
 
