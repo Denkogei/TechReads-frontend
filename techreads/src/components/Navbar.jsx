@@ -12,6 +12,7 @@ const Navbar = () => {
           <h1 className="text-2xl font-semibold cursor-pointer hover:text-blue-600">TechReads</h1>
         </Link>
         <Link to="/books" className="text-lg font-medium hover:text-blue-600">All Books</Link>
+        <Link to="/books" className="text-lg font-medium hover:text-blue-600">SignUp</Link>
       </div>
 
       
