@@ -1,6 +1,7 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { FaUserCircle } from "react-icons/fa";
 
 function Signup() {
   const initialValues = {
@@ -41,41 +42,62 @@ function Signup() {
   };
 
   return (
-    <div className="signup-container">
-      <h2>TECHREADS</h2>
-      <p>Empowering Kenyan minds</p>
+    <div className="w-96 mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+      <h2 className="text-center text-2xl font-bold mt-2">TECHREADS</h2>
+      <p className="text-center text-gray-500">Empowering Kenyan minds</p>
+      <br />
+      <div className="flex justify-center">
+        <FaUserCircle className="w-16 h-16 text-gray-600" />
+      </div>
+
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
         {({ isSubmitting, errors, touched }) => (
-          <Form>
-            <div>
-              <label>name:</label>
-              <Field type="text" name="name" />
+          <Form className="mt-4">
+            <div className="mb-3">
+              <label className="block text-sm font-medium">Name:</label>
+              <Field
+                type="text"
+                name="name"
+                className="w-full p-2 border rounded"
+              />
               {errors.name && touched.name && (
-                <div className="error">{errors.name}</div>
+                <div className="text-red-500 text-sm">{errors.name}</div>
               )}
             </div>
 
-            <div>
-              <label>Email:</label>
-              <Field type="email" name="email" />
+            <div className="mb-3">
+              <label className="block text-sm font-medium">Email:</label>
+              <Field
+                type="email"
+                name="email"
+                className="w-full p-2 border rounded"
+              />
               {errors.email && touched.email && (
-                <div className="error">{errors.email}</div>
+                <div className="text-red-500 text-sm">{errors.email}</div>
               )}
             </div>
 
-            <div>
-              <label>Password:</label>
-              <Field type="password" name="password" />
+            <div className="mb-3">
+              <label className="block text-sm font-medium">Password:</label>
+              <Field
+                type="password"
+                name="password"
+                className="w-full p-2 border rounded"
+              />
               {errors.password && touched.password && (
-                <div className="error">{errors.password}</div>
+                <div className="text-red-500 text-sm">{errors.password}</div>
               )}
             </div>
 
-            <button type="submit" disabled={isSubmitting}>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full bg-blue-600 text-white p-2 rounded mt-3"
+            >
               {isSubmitting ? "Signing Up..." : "Sign Up"}
             </button>
           </Form>
