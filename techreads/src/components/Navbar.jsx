@@ -50,7 +50,7 @@ const Navbar = ({ isLoggedIn }) => {
         
         {!isLoggedIn ? (
           <>
-            <Link to="/signin">
+            <Link to="/login">
               <button className="bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition">
                 Sign In
               </button>

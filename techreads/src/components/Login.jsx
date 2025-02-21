@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-const SignIn = () => {
+const Login = () => {
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -19,22 +20,22 @@ const SignIn = () => {
   });
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center mt-[50px]">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-        {/* Logo */}
+        
         <div className="flex justify-center">
           <div className="w-12 h-12 text-[#213BA7] text-4xl">📖</div>
         </div>
 
-        {/* Title */}
-        <h2 className="text-2xl font-bold text-center mt-2">Sign in to TechReads</h2>
+        
+        <h2 className="text-2xl font-bold text-center mt-2">Login to TechReads</h2>
         <p className="text-center text-gray-600">
-          Or <Link to="/register" className="text-[#213BA7] hover:underline">create a new account</Link>
+          Or <Link to="/signup" className="text-[#213BA7] hover:underline">sign up</Link>
         </p>
 
-        {/* Form */}
+        
         <form className="mt-6" onSubmit={formik.handleSubmit}>
-          {/* Email Field */}
+          
           <div>
             <label className="block text-gray-700">Email address</label>
             <div className="flex items-center border rounded-lg mt-1 px-3 py-2 bg-gray-100">
@@ -54,7 +55,7 @@ const SignIn = () => {
             )}
           </div>
 
-          {/* Password Field */}
+          
           <div className="mt-4">
             <label className="block text-gray-700">Password</label>
             <div className="flex items-center border rounded-lg mt-1 px-3 py-2 bg-gray-100">
@@ -74,7 +75,7 @@ const SignIn = () => {
             )}
           </div>
 
-          {/* Remember Me & Forgot Password */}
+          
           <div className="flex items-center justify-between mt-4">
             <label className="flex items-center text-gray-600">
               <input type="checkbox" className="mr-2" />
@@ -85,17 +86,30 @@ const SignIn = () => {
             </Link>
           </div>
 
-          {/* Sign In Button */}
+         
           <button
             type="submit"
             className="w-full mt-6 bg-[#213BA7] text-white py-2 rounded-lg font-medium hover:bg-[#1A2D86] transition"
           >
-            Sign in
+            Login
           </button>
         </form>
+
+        
+        <div className="flex items-center my-4">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="px-3 text-gray-500">Or</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+
+        
+        <button className="flex items-center justify-center w-full border py-2 rounded-lg text-gray-700 bg-white hover:bg-gray-100 shadow-sm">
+          <FcGoogle className="text-xl mr-2" />
+          Login with Google
+        </button>
       </div>
     </div>
   );
 };
 
-export default SignIn;
+export default Login;
