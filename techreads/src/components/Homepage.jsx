@@ -5,7 +5,7 @@ const Home = () => {
     <div className="px-6 py-10">
       <div className="bg-blue-600 text-white rounded-2xl py-12 px-10 max-w-7xl mx-auto w-full flex flex-col items-start">
         <h1 className="text-3xl font-bold">Welcome to TechReads</h1>
-        <p className="mt-2 text-base">Discover the best tech books in Kenya</p>
+        <p className="mt-2 text-base">Empowering Kenyan Minds</p>
         <Link to="/books">
           <button className="mt-4 bg-white text-blue-600 px-5 py-2.5 rounded-lg font-medium hover:bg-gray-100">
             Browse Collection
