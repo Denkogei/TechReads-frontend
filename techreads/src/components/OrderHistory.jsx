@@ -4,7 +4,7 @@ function OrderHistory() {
   return (
    <>
     <div>OrderHistory</div>
-    <h1>Order History</h1>
+    
    </>
   )
 }

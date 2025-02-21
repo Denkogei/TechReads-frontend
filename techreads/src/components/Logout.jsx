@@ -4,7 +4,7 @@ function Logout() {
   return (
     <>
     <div>Logout</div>
-    <h1>Logout</h1>
+    
     </>
   )
 }

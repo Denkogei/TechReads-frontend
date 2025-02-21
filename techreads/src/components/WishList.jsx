@@ -4,7 +4,7 @@ function WishList() {
   return (
    <>
     <div>WishList</div>
-    <h1>Wishlist</h1>
+    
    </>
   )
 }

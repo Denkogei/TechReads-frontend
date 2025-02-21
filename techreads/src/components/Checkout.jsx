@@ -4,7 +4,7 @@ function Checkout() {
   return (
     <>
     <div>Checkout</div>
-    <h1> Checkout</h1>
+   
     </>
   )
 }
