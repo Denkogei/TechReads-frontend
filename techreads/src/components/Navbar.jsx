@@ -15,15 +15,15 @@ const Navbar = () => {
       </div>
 
       
-      <div className="flex items-center space-x-4 ml-auto">
-        <FaHeart className="text-2xl cursor-pointer hover:text-black" />
-        <FaShoppingCart className="text-2xl cursor-pointer hover:text-black" />
-        <FaUser className="text-2xl cursor-pointer hover:text-black" />
+      <div className="flex items-center space-x-4">
         <input
           type="text"
           placeholder="Search books..."
           className="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        <FaHeart className="text-2xl cursor-pointer hover:text-black" />
+        <FaShoppingCart className="text-2xl cursor-pointer hover:text-black" />
+        <FaUser className="text-2xl cursor-pointer hover:text-black" />
       </div>
     </nav>
   );
