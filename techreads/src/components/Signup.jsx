@@ -42,7 +42,7 @@ function Signup() {
   };
 
   return (
-    <div className="w-96 mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+    <div className="w-96  mx-auto mt-10  py-16 px-10 bg-white rounded-lg shadow-lg">
       <h2 className="text-center text-2xl font-bold mt-2">TECHREADS</h2>
       <p className="text-center text-gray-500">Empowering Kenyan minds</p>
       <br />
