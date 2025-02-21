@@ -41,9 +41,46 @@ function Signup() {
   };
 
   return (
-    <>
-      <div>Signup</div>
-    </>
+    <div className="signup-container">
+      <h2>Signup</h2>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({ isSubmitting, errors, touched }) => (
+          <Form>
+            <div>
+              <label>Username:</label>
+              <Field type="text" name="username" />
+              {errors.username && touched.username && (
+                <div className="error">{errors.username}</div>
+              )}
+            </div>
+
+            <div>
+              <label>Email:</label>
+              <Field type="email" name="email" />
+              {errors.email && touched.email && (
+                <div className="error">{errors.email}</div>
+              )}
+            </div>
+
+            <div>
+              <label>Password:</label>
+              <Field type="password" name="password" />
+              {errors.password && touched.password && (
+                <div className="error">{errors.password}</div>
+              )}
+            </div>
+
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Signing Up..." : "Sign Up"}
+            </button>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 }
 
