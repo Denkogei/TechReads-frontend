@@ -8,7 +8,7 @@ const Home = () => {
         <p className="mt-2 text-base">Empowering Kenyan Minds</p>
         <Link to="/books">
           <button className="mt-4 bg-white text-blue-600 px-5 py-2.5 rounded-lg font-medium hover:bg-gray-100">
-            Browse Collection
+            Browse Books
           </button>
         </Link>
       </div>
