@@ -42,7 +42,8 @@ function Signup() {
 
   return (
     <div className="signup-container">
-      <h2>Signup</h2>
+      <h2>TECHREADS</h2>
+      <p>Empowering Kenyan minds</p>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
