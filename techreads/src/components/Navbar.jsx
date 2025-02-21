@@ -11,7 +11,7 @@ const Navbar = () => {
           <span className="text-blue-900 text-4xl">📖</span> 
           <h1 className="text-2xl font-semibold cursor-pointer hover:text-blue-600">TechReads</h1>
         </Link>
-        <Link to="/books" className="text-lg font-medium hover:text-blue-600">All Books</Link>
+        <Link to="/signup" className="text-lg font-medium hover:text-blue-600">All Books</Link>
       </div>
 
       
