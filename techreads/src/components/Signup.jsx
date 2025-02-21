@@ -1,12 +1,13 @@
-import React from 'react'
+import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 function Signup() {
   return (
     <>
-    <div>Signup</div>
-    
+      <div>Signup</div>
     </>
-  )
+  );
 }
 
-export default Signup
+export default Signup;
