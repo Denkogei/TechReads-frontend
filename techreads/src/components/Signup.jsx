@@ -124,17 +124,6 @@ const Signup = () => {
             </Form>
           )}
         </Formik>
-
-        <div className="flex items-center my-4">
-          <div className="flex-grow border-t border-gray-300"></div>
-          <span className="px-3 text-gray-500">Or</span>
-          <div className="flex-grow border-t border-gray-300"></div>
-        </div>
-
-        <button className="flex items-center justify-center w-full border py-2 rounded-lg text-gray-700 bg-white hover:bg-gray-100 shadow-sm">
-          <FcGoogle className="text-xl mr-2" />
-          Sign Up with Google
-        </button>
       </div>
     </div>
   );
