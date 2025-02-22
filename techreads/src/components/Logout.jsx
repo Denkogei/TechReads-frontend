@@ -1,12 +1,15 @@
-import React from 'react'
+import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect } from "react";
 
-function Logout() {
-  return (
-    <>
-    <div>Logout</div>
-    
-    </>
-  )
-}
+const Logout = () => {
+  const { logout } = useAuth0();
 
-export default Logout
+  useEffect(() => {
+    logout({ logoutParams: { returnTo: "http://localhost:5173/" } });
+    localStorage.removeItem("user");
+  }, [logout]);
+
+  return <div>Logging out...</div>;
+};
+
+export default Logout;

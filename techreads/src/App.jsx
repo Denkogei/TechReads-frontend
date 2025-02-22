@@ -31,7 +31,6 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Homepage />} />
-          <Route path="/all-books" element={<AllBooks />} />
           <Route path="/cart" element={<ShoppingCart />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
@@ -40,7 +39,11 @@ function App() {
           <Route path="/categories" element={<Categories />} />
           <Route path="/logout" element={<Logout />} />
 
-          {/* Protect sensitive routes */}
+          
+         
+
+          {/* 🔒 Protect sensitive routes */}
+          <Route path="/all-books" element={<ProtectedRoute><AllBooks /></ProtectedRoute>} />
           <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
           <Route path="/orders" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />

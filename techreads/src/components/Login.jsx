@@ -19,7 +19,7 @@ const Login = () => {
     }),
     onSubmit: async (values) => {
       try {
-        await loginWithRedirect(); // Redirects to Auth0 login page (fix)
+        await loginWithRedirect(); 
       } catch (error) {
         console.error("Login failed:", error);
       }
@@ -102,7 +102,7 @@ const Login = () => {
 
         <button
           className="flex items-center justify-center w-full border py-2 rounded-lg text-gray-700 bg-white hover:bg-gray-100 shadow-sm"
-          onClick={() => loginWithRedirect()} // Fix for Google Login
+          onClick={() => loginWithRedirect()} 
         >
           <FcGoogle className="text-xl mr-2" />
           Login with Google
