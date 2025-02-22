@@ -1,9 +1,11 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { FaUserCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 
-function Signup() {
+const Signup = () => {
   const initialValues = {
     name: "",
     email: "",
@@ -36,75 +38,106 @@ function Signup() {
         alert("Signup successful!");
         resetForm();
       })
-      .catch((err) => alert(err));
-
-    setSubmitting(false);
+      .catch((err) => alert(err))
+      .finally(() => setSubmitting(false));
   };
 
   return (
-    <div className="w-96  mx-auto mt-10  py-16 px-10 bg-white rounded-lg shadow-lg">
-      <h2 className="text-center text-2xl font-bold mt-2">TECHREADS</h2>
-      <p className="text-center text-gray-500">Empowering Kenyan minds</p>
-      <br />
-      <div className="flex justify-center">
-        <FaUserCircle className="w-16 h-16 text-gray-600" />
+    <div className="flex items-center justify-center mt-[50px]">
+      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
+        <div className="flex justify-center">
+          <div className="w-12 h-12 text-[#213BA7] text-4xl">📖</div>
+        </div>
+
+        <h2 className="text-2xl font-bold text-center mt-2">
+          Sign Up for TechReads
+        </h2>
+        <p className="text-center text-gray-600">
+          Already have an account?{" "}
+          <Link to="/login" className="text-[#213BA7] hover:underline">
+            Login
+          </Link>
+        </p>
+
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting, errors, touched }) => (
+            <Form className="mt-6">
+              <div>
+                <label className="block text-gray-700">Full Name</label>
+                <div className="flex items-center border rounded-lg mt-1 px-3 py-2 bg-gray-100">
+                  <FaUser className="text-gray-500" size={18} />
+                  <Field
+                    type="text"
+                    name="name"
+                    placeholder="John Doe"
+                    className="w-full bg-gray-100 outline-none ml-2"
+                  />
+                </div>
+                {errors.name && touched.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                )}
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-gray-700">Email Address</label>
+                <div className="flex items-center border rounded-lg mt-1 px-3 py-2 bg-gray-100">
+                  <FaEnvelope className="text-gray-500" size={18} />
+                  <Field
+                    type="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    className="w-full bg-gray-100 outline-none ml-2"
+                  />
+                </div>
+                {errors.email && touched.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                )}
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-gray-700">Password</label>
+                <div className="flex items-center border rounded-lg mt-1 px-3 py-2 bg-gray-100">
+                  <FaLock className="text-gray-500" size={18} />
+                  <Field
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    className="w-full bg-gray-100 outline-none ml-2"
+                  />
+                </div>
+                {errors.password && touched.password && (
+                  <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                )}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full mt-6 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-[#1A2D86] transition"
+              >
+                {isSubmitting ? "Signing Up..." : "Sign Up"}
+              </button>
+            </Form>
+          )}
+        </Formik>
+
+        <div className="flex items-center my-4">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="px-3 text-gray-500">Or</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+
+        <button className="flex items-center justify-center w-full border py-2 rounded-lg text-gray-700 bg-white hover:bg-gray-100 shadow-sm">
+          <FcGoogle className="text-xl mr-2" />
+          Sign Up with Google
+        </button>
       </div>
-
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isSubmitting, errors, touched }) => (
-          <Form className="mt-4">
-            <div className="mb-3">
-              <label className="block text-sm font-medium">Name:</label>
-              <Field
-                type="text"
-                name="name"
-                className="w-full p-2 border rounded"
-              />
-              {errors.name && touched.name && (
-                <div className="text-red-500 text-sm">{errors.name}</div>
-              )}
-            </div>
-
-            <div className="mb-3">
-              <label className="block text-sm font-medium">Email:</label>
-              <Field
-                type="email"
-                name="email"
-                className="w-full p-2 border rounded"
-              />
-              {errors.email && touched.email && (
-                <div className="text-red-500 text-sm">{errors.email}</div>
-              )}
-            </div>
-
-            <div className="mb-3">
-              <label className="block text-sm font-medium">Password:</label>
-              <Field
-                type="password"
-                name="password"
-                className="w-full p-2 border rounded"
-              />
-              {errors.password && touched.password && (
-                <div className="text-red-500 text-sm">{errors.password}</div>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-blue-600 text-white p-2 rounded mt-3"
-            >
-              {isSubmitting ? "Signing Up..." : "Sign Up"}
-            </button>
-          </Form>
-        )}
-      </Formik>
     </div>
   );
-}
+};
 
 export default Signup;
