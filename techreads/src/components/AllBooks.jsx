@@ -28,7 +28,26 @@ function AllBooks() {
   return (
     <div>
       <h1>All Books</h1>
-      
+      <div>
+        {books.map((book) => (
+          <div key={book.id} onClick={() => navigate(`/books/${book.id}`)}>
+            <img src={book.image} alt={book.title} />
+            <div>
+              <h2>{book.title}</h2>
+              <p>By {book.author}</p>
+              <span>Ksh {book.price}</span>
+              <div onClick={(e) => e.stopPropagation()}>
+                <button onClick={() => handleAddToCart(book)}>
+                  Add to Cart
+                </button>
+                <button onClick={() => toggleWishlist(book.id)}>
+                  {wishlist.includes(book.id) ? "❤️" : "🤍"}
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
