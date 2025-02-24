@@ -17,7 +17,13 @@ function AllBooks() {
     console.log(`Added ${book.title} to cart`);
   };
 
-  
+  const toggleWishlist = (bookId) => {
+    setWishlist((prevWishlist) =>
+      prevWishlist.includes(bookId)
+        ? prevWishlist.filter((id) => id !== bookId)
+        : [...prevWishlist, bookId]
+    );
+  };
 
   return (
     <div>
