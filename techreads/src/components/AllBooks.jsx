@@ -13,7 +13,9 @@ function AllBooks() {
       .catch((error) => console.error("Error fetching books:", error));
   }, []);
 
-  
+  const handleAddToCart = (book) => {
+    console.log(`Added ${book.title} to cart`);
+  };
 
   
 
