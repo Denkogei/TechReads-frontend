@@ -1,19 +1,24 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 
 const Signup = () => {
+  const navigate = useNavigate();
+
   const initialValues = {
     name: "",
+    username: "",
     email: "",
     password: "",
   };
 
   const validationSchema = Yup.object({
     name: Yup.string()
+      .min(3, "Must be at least 3 characters")
+      .required("Full Name is required"),
+    username: Yup.string()
       .min(3, "Must be at least 3 characters")
       .required("Username is required"),
     email: Yup.string()
@@ -24,21 +29,25 @@ const Signup = () => {
       .required("Password is required"),
   });
 
-  const handleSubmit = (values, { setSubmitting, resetForm }) => {
-    fetch("http://127.0.0.1:5555/register", {
+  const handleSubmit = (values, { setSubmitting }) => {
+    fetch("http://127.0.0.1:5555/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (!data.success) {
-          throw new Error(data.error || "Something went wrong");
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((data) => {
+            throw new Error(data.error || "Something went wrong");
+          });
         }
-        alert("Signup successful!");
-        resetForm();
+        return res.json();
       })
-      .catch((err) => alert(err))
+      .then(() => {
+        
+        navigate("/login");
+      })
+      .catch((err) => alert(err.message))
       .finally(() => setSubmitting(false));
   };
 
@@ -79,6 +88,22 @@ const Signup = () => {
                 </div>
                 {errors.name && touched.name && (
                   <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                )}
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-gray-700">Username</label>
+                <div className="flex items-center border rounded-lg mt-1 px-3 py-2 bg-gray-100">
+                  <FaUser className="text-gray-500" size={18} />
+                  <Field
+                    type="text"
+                    name="username"
+                    placeholder="johndoe"
+                    className="w-full bg-gray-100 outline-none ml-2"
+                  />
+                </div>
+                {errors.username && touched.username && (
+                  <p className="text-red-500 text-sm mt-1">{errors.username}</p>
                 )}
               </div>
 
