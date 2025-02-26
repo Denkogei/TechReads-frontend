@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useFormik } from "formik";
@@ -6,7 +6,8 @@ import * as Yup from "yup";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const Login = () => {
-  const { loginWithRedirect, loginWithPopup } = useAuth0();
+  const { loginWithRedirect } = useAuth0();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -17,11 +18,27 @@ const Login = () => {
       email: Yup.string().email("Invalid email address").required("Email is required"),
       password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
     }),
-    onSubmit: async (values) => {
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
-        await loginWithRedirect(); 
+        const response = await fetch("http://localhost:5000/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        });
+
+        const data = await response.json();
+if (response.ok) {
+  localStorage.setItem("token", data.access_token);
+  localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
+  navigate("/");
+  window.location.reload();
+}
+
       } catch (error) {
         console.error("Login failed:", error);
+        setErrors({ email: "Invalid email or password" });
+      } finally {
+        setSubmitting(false);
       }
     },
   });
@@ -45,7 +62,7 @@ const Login = () => {
               <input
                 type="email"
                 name="email"
-                placeholder="you@example.com"
+                mailto:placeholder="you@example.com"
                 className="w-full bg-gray-100 outline-none ml-2"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -88,9 +105,12 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full mt-6 bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-[#1A2D86] transition"
+            disabled={formik.isSubmitting}
+            className={`w-full mt-6 py-2 rounded-lg font-medium transition ${
+              formik.isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 text-white hover:bg-[#1A2D86]"
+            }`}
           >
-            Login
+            {formik.isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>
 
@@ -102,7 +122,7 @@ const Login = () => {
 
         <button
           className="flex items-center justify-center w-full border py-2 rounded-lg text-gray-700 bg-white hover:bg-gray-100 shadow-sm"
-          onClick={() => loginWithRedirect()} 
+          onClick={() => loginWithRedirect()}
         >
           <FcGoogle className="text-xl mr-2" />
           Login with Google

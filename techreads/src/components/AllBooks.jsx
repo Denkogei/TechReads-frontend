@@ -7,7 +7,7 @@ function AllBooks() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5555/books")
+    fetch("http://localhost:5000/books")
       .then((response) => response.json())
       .then((data) => setBooks(data))
       .catch((error) => console.error("Error fetching books:", error));
@@ -36,7 +36,7 @@ function AllBooks() {
             onClick={() => navigate(`/books/${book.id}`)}
           >
             <img
-              src={book.image}
+              src={book.image_url}
               alt={book.title}
               className="w-full h-72 object-cover"
             />
