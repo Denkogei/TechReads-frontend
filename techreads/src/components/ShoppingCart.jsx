@@ -4,7 +4,7 @@ const ShoppingCart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
 useEffect(() => {
   const token = localStorage.getItem("token");
   if (!token) {
@@ -56,8 +56,46 @@ const getUserIdFromToken = (token) => {
   }
 };
   return (
-    <div>ShoppingCart</div>
-  )
-}
+    <div>
+      <h2>Shopping Cart</h2>
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p>{error}</p>
+      ) : cartItems.length === 0 ? (
+        <p>Your cart is empty.</p>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Subtotal</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cartItems.map((item) => (
+              <tr key={item.id}>
+                <td>
+                  <img src={item.image} alt={item.name} width="50" height="50" />
+                  <span>{item.name}</span>
+                </td>
+                <td>{item.price}</td>
+                <td>{item.quantity}</td>
+                <td>{item.price * item.quantity}</td>
+                <td>
+                  <button>Proceed To Checkout</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+};
+
 
 export default ShoppingCart
