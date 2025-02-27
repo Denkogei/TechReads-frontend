@@ -1,12 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { FcGoogle } from "react-icons/fc";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useAuth0 } from "@auth0/auth0-react";
+
 
 const Login = () => {
-  const { loginWithRedirect } = useAuth0();
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -114,19 +112,19 @@ if (response.ok) {
           </button>
         </form>
 
-        <div className="flex items-center my-4">
+        {/* <div className="flex items-center my-4">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="px-3 text-gray-500">Or</span>
           <div className="flex-grow border-t border-gray-300"></div>
-        </div>
+        </div> */}
 
-        <button
+        {/* <button
           className="flex items-center justify-center w-full border py-2 rounded-lg text-gray-700 bg-white hover:bg-gray-100 shadow-sm"
           onClick={() => loginWithRedirect()}
         >
           <FcGoogle className="text-xl mr-2" />
           Login with Google
-        </button>
+        </button> */}
       </div>
     </div>
   );
