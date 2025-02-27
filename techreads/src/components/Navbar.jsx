@@ -5,7 +5,9 @@ import { useState, useEffect } from "react";
 
 const Navbar = () => {
   const { user: auth0User, isAuthenticated: isAuth0Authenticated, logout } = useAuth0();
-  const [isUserAuthenticated, setIsUserAuthenticated] = useState(false);
+  const [isUserAuthenticated, setIsUserAuthenticated] = useState(
+    !!localStorage.getItem("token") || isAuth0Authenticated
+  );
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -15,10 +17,11 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    setIsUserAuthenticated(false); // Ensure immediate UI update
+
     if (isAuth0Authenticated) {
       logout({ logoutParams: { returnTo: window.location.origin } });
     }
-    setIsUserAuthenticated(false);
   };
 
   return (
