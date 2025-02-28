@@ -49,12 +49,35 @@ const Cart = () => {
       const base64Url = token.split(".")[1];
       const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
       const decodedData = JSON.parse(atob(base64));
-
       return decodedData.user_id || decodedData.sub;
     } catch (error) {
       console.error("Error decoding JWT:", error);
       return null;
     }
+  };
+
+  const deleteCartItem = (itemId) => {
+    const token = localStorage.getItem("token");
+
+    fetch(`http://localhost:5000/cart/${itemId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error deleting item! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(() => {
+        setCartItems((prevItems) =>
+          prevItems.filter((item) => item.id !== itemId)
+        );
+      })
+      .catch((error) => console.error("Error deleting item:", error));
   };
 
   return (
@@ -75,7 +98,7 @@ const Cart = () => {
               <th className="p-3 border">Price</th>
               <th className="p-3 border">Quantity</th>
               <th className="p-3 border">Subtotal</th>
-              <th className="p-3 border">Action</th>
+              <th className="p-3 border">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -92,9 +115,15 @@ const Cart = () => {
                 <td className="p-3 border">Ksh {item.price}</td>
                 <td className="p-3 border text-center">{item.quantity}</td>
                 <td className="p-3 border">Ksh {item.price * item.quantity}</td>
-                <td className="p-3 border">
-                  <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
-                    Proceed To Checkout
+                <td className="p-3 border flex flex-col gap-2">
+                  <button className="w-full bg-blue-600 text-white py-1 px-2 text-sm rounded-md hover:bg-blue-700 transition">
+                    Checkout
+                  </button>
+                  <button
+                    className="w-full bg-red-600 text-white py-1 px-2 text-sm rounded-md hover:bg-red-700 transition"
+                    onClick={() => deleteCartItem(item.id)}
+                  >
+                    Delete
                   </button>
                 </td>
               </tr>
