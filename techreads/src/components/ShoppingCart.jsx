@@ -67,22 +67,27 @@ const Cart = () => {
       },
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Error deleting item! Status: ${response.status}`);
+        if (response.status === 200) {
+          setCartItems((prevItems) =>
+            prevItems.filter((item) => item.id !== itemId)
+          );
+        } else {
+          return response.json().then((data) => {
+            throw new Error(data.message || "Error deleting item");
+          });
         }
-        return response.json();
       })
-      .then(() => {
-        setCartItems((prevItems) =>
-          prevItems.filter((item) => item.id !== itemId)
-        );
-      })
-      .catch((error) => console.error("Error deleting item:", error));
+      .catch((error) => {
+        console.error("Error deleting item:", error);
+        setError(error.message);
+      });
   };
 
   return (
     <div className="container mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4 text-center">Shopping Cart</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+        Shopping Cart
+      </h2>
 
       {loading ? (
         <p className="text-center text-gray-500">Loading...</p>
@@ -91,45 +96,70 @@ const Cart = () => {
       ) : cartItems.length === 0 ? (
         <p className="text-center text-gray-500">Your cart is empty.</p>
       ) : (
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-gray-200 text-left">
-              <th className="p-3 border">Product</th>
-              <th className="p-3 border">Price</th>
-              <th className="p-3 border">Quantity</th>
-              <th className="p-3 border">Subtotal</th>
-              <th className="p-3 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cartItems.map((item) => (
-              <tr key={item.id} className="border">
-                <td className="p-3 flex items-center gap-4">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-16 h-16 rounded-md"
-                  />
-                  <span className="text-lg">{item.name}</span>
-                </td>
-                <td className="p-3 border">Ksh {item.price}</td>
-                <td className="p-3 border text-center">{item.quantity}</td>
-                <td className="p-3 border">Ksh {item.price * item.quantity}</td>
-                <td className="p-3 border flex flex-col gap-2">
-                  <button className="w-full bg-blue-600 text-white py-1 px-2 text-sm rounded-md hover:bg-blue-700 transition">
-                    Checkout
-                  </button>
-                  <button
-                    className="w-full bg-red-600 text-white py-1 px-2 text-sm rounded-md hover:bg-red-700 transition"
-                    onClick={() => deleteCartItem(item.id)}
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white shadow-lg rounded-lg border border-gray-200">
+            <thead>
+              <tr className="bg-gray-100 border-b border-gray-200">
+                <th className="p-4 text-left font-semibold text-gray-700">
+                  Product
+                </th>
+                <th className="p-4 text-center font-semibold text-gray-700">
+                  Price
+                </th>
+                <th className="p-4 text-center font-semibold text-gray-700">
+                  Quantity
+                </th>
+                <th className="p-4 text-center font-semibold text-gray-700">
+                  Subtotal
+                </th>
+                <th className="p-4 text-center font-semibold text-gray-700">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {cartItems.map((item, index) => (
+                <tr
+                  key={item.id}
+                  className={`border-b border-gray-200 ${
+                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                  } hover:bg-gray-100 transition`}
+                >
+                  <td className="p-4 flex items-center gap-4">
+                    <img
+                      src={item.image_url}
+                      alt={item.name}
+                      className="w-16 h-16 rounded-md shadow-md"
+                    />
+                    <span className="text-gray-800 font-medium">
+                      {item.name}
+                    </span>
+                  </td>
+                  <td className="p-4 text-center text-gray-600">
+                    Ksh {item.price}
+                  </td>
+                  <td className="p-4 text-center text-gray-600">
+                    {item.quantity}
+                  </td>
+                  <td className="p-4 text-center text-gray-800 font-semibold">
+                    Ksh {item.price * item.quantity}
+                  </td>
+                  <td className="p-4 flex flex-col items-center gap-2">
+                    <button className="w-28 bg-blue-600 text-white py-2 text-sm rounded-lg shadow-md hover:bg-blue-700 transition">
+                      Checkout
+                    </button>
+                    <button
+                      className="w-28 bg-red-600 text-white py-2 text-sm rounded-lg shadow-md hover:bg-red-700 transition"
+                      onClick={() => deleteCartItem(item.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
