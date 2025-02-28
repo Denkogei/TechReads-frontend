@@ -54,7 +54,7 @@ const Navbar = () => {
             </Link>
             <Link to="/profile" className="flex items-center space-x-2 text-gray-700 hover:text-gray-600 transition">
               <FaUser className="text-xl" />
-              <span className="text-sm">Profile</span>
+              <span className="text-sm">Profile & Orders</span>
             </Link>
             <button
               onClick={handleLogout}
