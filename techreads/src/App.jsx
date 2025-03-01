@@ -13,6 +13,8 @@ import OrderHistory from "./components/OrderHistory";
 import Logout from "./components/Logout";
 import Categories from "./components/Categories";
 import AllBooks from "./components/AllBooks";
+import Footer from "./components/Footer";
+
 
 const domain = "dev-yp43fewqn4xgjq06.us.auth0.com";
 const clientId = "ODsajv0GFDnBM8IPowpYz9aTLgJ3UYkP";
@@ -30,6 +32,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Homepage />} />
+
           <Route path="/cart" element={<ShoppingCart />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
@@ -42,6 +45,7 @@ function App() {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/orders" element={<OrderHistory />} />
         </Routes>
+        <Footer />
       </Router>
     </Auth0Provider>
   );
