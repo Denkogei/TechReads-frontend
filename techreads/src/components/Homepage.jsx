@@ -1,145 +1,77 @@
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useState, useEffect } from "react";
 
-const Home = () => {
+const featuredBooks = [
+  {
+    id: 1,
+    title: "Eloquent JavaScript",
+    author: "Marijn Haverbeke",
+    image: "https://miro.medium.com/v2/resize:fit:1400/1*zBRkcBbsjWzcPjtcxqhb3Q.jpeg",
+    description: "A deep dive into JavaScript's best practices and patterns.",
+  },
+  {
+    id: 2,
+    title: "Road to React",
+    author: "Robin Wieruch",
+    image: "https://miro.medium.com/v2/resize:fit:400/format:webp/1*_wVXJsXuzy42m3nyQVRoeQ.jpeg",
+    description: "A hands-on guide to mastering React with real-world examples.",
+  },
+  {
+    id: 3,
+    title: "Python Flask for Beginners",
+    author: "A.J. García",
+    image: "https://d2sofvawe08yqg.cloudfront.net/python-flask-for-beginners/s_hero2x?1620648083",
+    description: "Learn Flask and build powerful web applications.",
+  },
+];
+
+const HomePage = () => {
   const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
-  const [books, setBooks] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [sortBy, setSortBy] = useState("");
-  const [priceRange, setPriceRange] = useState(3500);
-
-  const categories = [
-    "Programming",
-    "Software Architecture",
-    "Web Development",
-    "Data Science",
-    "Artificial Intelligence",
-    "Cybersecurity",
-    "DevOps",
-  ];
-
-  const sortOptions = [
-    "Popularity",
-    "Price: Low to High",
-    "Price: High to Low",
-  ];
-
-  // Fetch books from Flask API
-  useEffect(() => {
-    fetch("http://localhost:5000/books", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setBooks(data))
-      .catch((error) => console.error("Error fetching books:", error));
-  }, []);
-
-  // Sorting logic
-  const sortedBooks = [...books].sort((a, b) => {
-    if (sortBy === "Price: Low to High") return a.price - b.price;
-    if (sortBy === "Price: High to Low") return b.price - a.price;
-    return 0;
-  });
 
   return (
-    <div className="bg-gray-100 min-h-screen px-6 py-10">
-      {/* Search Bar */}
-      <div className="flex justify-center mb-8">
-        <input
-          type="text"
-          placeholder="Search for books..."
-          className="w-full max-w-xl px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
+    <div className="bg-gray-50 min-h-screen">
+      {/* Hero Section */}
+      <div className="w-[95%] max-w-6xl bg-blue-600 text-white py-10 px-12 rounded-xl shadow-md text-center mx-auto mt-10">
+        <h1 className="text-4xl font-bold">Welcome to TechReads</h1>
+        <p className="text-lg mt-2 opacity-90">Empowering Kenyan Minds with Knowledge</p>
+        <button
+          className="mt-6 bg-white text-blue-600 font-semibold px-6 py-2 rounded-md hover:bg-gray-200 transition"
+          onClick={() => navigate(isAuthenticated ? "/all-books" : "/signup")}
+        >
+          Browse Books
+        </button>
       </div>
 
-      {/* Featured Books Section */}
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl font-bold text-gray-900">Featured Books</h2>
-        <p className="text-blue-600 mt-2">
-          Discover the latest and most popular tech books
-        </p>
-      </div>
-
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row gap-6 mt-6">
-        {/* Filters Sidebar */}
-        <div className="bg-white p-6 shadow-md rounded-lg w-full md:w-1/4">
-          <h3 className="text-lg font-semibold mb-4">Filters</h3>
-          <label className="block text-sm font-medium">Category</label>
-          <select
-            className="w-full border rounded-lg px-3 py-2 mb-4"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="">All Categories</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
+      {/* Featured Books Section (Only for unauthenticated users) */}
+      {!isAuthenticated ? (
+        <div className="max-w-6xl mx-auto px-6 py-12">
+          <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">Featured Books</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {featuredBooks.map((book) => (
+              <div key={book.id} className="bg-white shadow-lg rounded-lg p-6 transform hover:scale-105 transition">
+                <img src={book.image} alt={book.title} className="w-full h-56 object-contain rounded-md mb-4" />
+                <h3 className="text-2xl font-semibold">{book.title}</h3>
+                <p className="text-gray-500 text-md">by {book.author}</p>
+                <p className="text-gray-600 text-md mt-3">{book.description}</p>
+              </div>
             ))}
-          </select>
-
-          <label className="block text-sm font-medium">Price Range</label>
-          <p className="text-gray-700 mb-1">KSh 3,500 - 10,000</p>
-          <input
-            type="range"
-            className="w-full mb-4"
-            min="3500"
-            max="10000"
-            value={priceRange}
-            onChange={(e) => setPriceRange(e.target.value)}
-          />
-
-          <label className="block text-sm font-medium">Sort By</label>
-          <select
-            className="w-full border rounded-lg px-3 py-2"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            {sortOptions.map((option, index) => (
-              <option key={index} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+          </div>
+          <div className="flex justify-center mt-10">
+            <button
+              onClick={() => navigate("/signup")}
+              className="bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition"
+            >
+              Sign Up to Explore More
+            </button>
+          </div>
         </div>
-
-        {/* Books List */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-          {sortedBooks.slice(0, 3).map((book) => (
-            <div key={book.id} className="bg-white p-4 rounded-lg shadow-md">
-              <img
-                src={book.image_url}
-                alt={book.title}
-                className="h-40 w-full object-cover rounded-md mb-4"
-              />
-              <h3 className="text-lg font-semibold">{book.title}</h3>
-              <p className="text-sm text-gray-600">{book.author}</p>
-              <p className="text-blue-600 font-bold">
-                KSh {book.price.toLocaleString()}
-              </p>
-              <button
-                className="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700"
-                onClick={() => {
-                  if (!isAuthenticated) {
-                    navigate("/login"); // Redirect to login if not authenticated
-                  } else {
-                    console.log(`Added ${book.title} to cart`);
-                    // Implement add to cart logic here
-                  }
-                }}
-              >
-                Add to Cart
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
+      ) : (
+        navigate("/all-books")
+      )}
     </div>
   );
 };
 
-export default Home;
+export default HomePage;
