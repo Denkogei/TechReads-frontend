@@ -33,7 +33,7 @@ function App() {
           <Route path="/cart" element={<ShoppingCart />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/book/:id" element={<BookDetails />} />
+          <Route path="/books/:id" element={<BookDetails />} />
           <Route path="/wishlist" element={<WishList />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/logout" element={<Logout />} />
