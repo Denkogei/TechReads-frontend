@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Home = () => {
   const { isAuthenticated } = useAuth0();
+  const navigate = useNavigate();
+  const [books, setBooks] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortBy, setSortBy] = useState("");
   const [priceRange, setPriceRange] = useState(3500);
@@ -22,54 +24,26 @@ const Home = () => {
     "Popularity",
     "Price: Low to High",
     "Price: High to Low",
-    "Ratings",
   ];
 
-  // Sample book data with decimal ratings
-  const books = [
-    {
-      id: 1,
-      title: "JavaScript Basics",
-      author: "John Doe",
-      price: 4500,
-      rating: 4.2,
-    },
-    {
-      id: 2,
-      title: "React Mastery",
-      author: "Jane Smith",
-      price: 5500,
-      rating: 4.8,
-    },
-    {
-      id: 3,
-      title: "Data Science for Beginners",
-      author: "Alice Brown",
-      price: 3500,
-      rating: 3.9,
-    },
-  ];
+  // Fetch books from Flask API
+  useEffect(() => {
+    fetch("http://localhost:5000/books", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setBooks(data))
+      .catch((error) => console.error("Error fetching books:", error));
+  }, []);
 
   // Sorting logic
   const sortedBooks = [...books].sort((a, b) => {
     if (sortBy === "Price: Low to High") return a.price - b.price;
     if (sortBy === "Price: High to Low") return b.price - a.price;
-    if (sortBy === "Ratings") return b.rating - a.rating;
     return 0;
   });
-
-  // Function to render stars with numeric rating
-  const renderStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 >= 0.5 ? "★" : "";
-    return (
-      <span className="text-yellow-500 font-semibold">
-        {rating.toFixed(1)} {"★".repeat(fullStars)}
-        {halfStar}
-        {"☆".repeat(5 - fullStars - (halfStar ? 1 : 0))}
-      </span>
-    );
-  };
 
   return (
     <div className="bg-gray-100 min-h-screen px-6 py-10">
@@ -94,8 +68,6 @@ const Home = () => {
         {/* Filters Sidebar */}
         <div className="bg-white p-6 shadow-md rounded-lg w-full md:w-1/4">
           <h3 className="text-lg font-semibold mb-4">Filters</h3>
-
-          {/* Categories Dropdown */}
           <label className="block text-sm font-medium">Category</label>
           <select
             className="w-full border rounded-lg px-3 py-2 mb-4"
@@ -110,7 +82,6 @@ const Home = () => {
             ))}
           </select>
 
-          {/* Price Range */}
           <label className="block text-sm font-medium">Price Range</label>
           <p className="text-gray-700 mb-1">KSh 3,500 - 10,000</p>
           <input
@@ -122,7 +93,6 @@ const Home = () => {
             onChange={(e) => setPriceRange(e.target.value)}
           />
 
-          {/* Sort By Dropdown */}
           <label className="block text-sm font-medium">Sort By</label>
           <select
             className="w-full border rounded-lg px-3 py-2"
@@ -139,16 +109,29 @@ const Home = () => {
 
         {/* Books List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-          {sortedBooks.map((book) => (
+          {sortedBooks.slice(0, 3).map((book) => (
             <div key={book.id} className="bg-white p-4 rounded-lg shadow-md">
-              <div className="h-40 bg-gray-300 rounded-md mb-4"></div>
+              <img
+                src={book.image_url}
+                alt={book.title}
+                className="h-40 w-full object-cover rounded-md mb-4"
+              />
               <h3 className="text-lg font-semibold">{book.title}</h3>
               <p className="text-sm text-gray-600">{book.author}</p>
-              <p>{renderStars(book.rating)}</p>
               <p className="text-blue-600 font-bold">
                 KSh {book.price.toLocaleString()}
               </p>
-              <button className="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700">
+              <button
+                className="mt-2 w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700"
+                onClick={() => {
+                  if (!isAuthenticated) {
+                    navigate("/login"); // Redirect to login if not authenticated
+                  } else {
+                    console.log(`Added ${book.title} to cart`);
+                    // Implement add to cart logic here
+                  }
+                }}
+              >
                 Add to Cart
               </button>
             </div>
