@@ -83,6 +83,30 @@ const Cart = () => {
       });
   };
 
+  const calculateTotal = () => {
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
+  };
+
+  const getDeliveryFee = () => {
+    return calculateTotal() > 5000 ? 0 : 300;
+  };
+
+  const moveToWishlist = (item) => {
+    fetch("http://localhost:5000/wishlist", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(item),
+    })
+      .then(() => deleteCartItem(item.id))
+      .catch((error) => console.error("Error adding to wishlist:", error));
+  };
+
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
@@ -154,11 +178,25 @@ const Cart = () => {
                     >
                       Delete
                     </button>
+                    <button
+                      className="w-28 bg-yellow-500 text-white py-2 text-sm rounded-lg shadow-md hover:bg-yellow-600 transition"
+                      onClick={() => moveToWishlist(item)}
+                    >
+                      Move to Wishlist
+                    </button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+          <div className="text-right mt-4">
+            <p className="text-xl font-bold text-gray-800">
+              Total: Ksh {calculateTotal()}
+            </p>
+            <p className="text-lg text-gray-600">
+              Estimated Delivery Fee: Ksh {getDeliveryFee()}
+            </p>
+          </div>
         </div>
       )}
     </div>
