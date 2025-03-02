@@ -13,6 +13,8 @@ import Logout from "./components/Logout";
 import Categories from "./components/Categories";
 import AllBooks from "./components/AllBooks";
 import Dashboard from "./components/Admin/Dashboard";
+import BookManagement from "./components/Admin/BooksManagment";
+import Footer from "./components/Footer";
 
 function AppLayout() {
   const location = useLocation();
@@ -39,7 +41,9 @@ function AppLayout() {
 
         {/* Admin Routes */}
         <Route path="/admin" element={<Dashboard />} />
+        <Route path="/admin/books" element={<BookManagement />} />
       </Routes>
+      <Footer />
     </>
   );
 }
