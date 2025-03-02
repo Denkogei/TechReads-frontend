@@ -13,6 +13,7 @@ import OrderHistory from "./components/OrderHistory";
 import Logout from "./components/Logout";
 import Categories from "./components/Categories";
 import AllBooks from "./components/AllBooks";
+import Dashboard from "./components/Admin/Dashboard";
 
 const domain = "dev-yp43fewqn4xgjq06.us.auth0.com";
 const clientId = "ODsajv0GFDnBM8IPowpYz9aTLgJ3UYkP";
@@ -41,6 +42,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/orders" element={<OrderHistory />} />
+          <Route path="/admin" element={<Dashboard />} /> {/* Admin Dashboard Route */}
         </Routes>
       </Router>
     </Auth0Provider>
