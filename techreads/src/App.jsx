@@ -13,6 +13,7 @@ import OrderHistory from "./components/OrderHistory";
 import Logout from "./components/Logout";
 import Categories from "./components/Categories";
 import AllBooks from "./components/AllBooks";
+import Dashboard from "./components/Admin/Dashboard";
 import Footer from "./components/Footer";
 
 
@@ -44,6 +45,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/orders" element={<OrderHistory />} />
+          <Route path="/admin" element={<Dashboard />} /> {/* Admin Dashboard Route */}
         </Routes>
         <Footer />
       </Router>
