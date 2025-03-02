@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 
 const featuredBooks = [
   {
@@ -27,8 +26,10 @@ const featuredBooks = [
 ];
 
 const HomePage = () => {
-  const { isAuthenticated } = useAuth0();
   const navigate = useNavigate();
+
+  // Check if the user is authenticated by checking for a token in localStorage
+  const isAuthenticated = !!localStorage.getItem("token"); // Returns true if token exists
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -44,20 +45,20 @@ const HomePage = () => {
         </button>
       </div>
 
-      {/* Featured Books Section (Only for unauthenticated users) */}
-      {!isAuthenticated ? (
-        <div className="max-w-6xl mx-auto px-6 py-12">
-          <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">Featured Books</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredBooks.map((book) => (
-              <div key={book.id} className="bg-white shadow-lg rounded-lg p-6 transform hover:scale-105 transition">
-                <img src={book.image} alt={book.title} className="w-full h-56 object-contain rounded-md mb-4" />
-                <h3 className="text-2xl font-semibold">{book.title}</h3>
-                <p className="text-gray-500 text-md">by {book.author}</p>
-                <p className="text-gray-600 text-md mt-3">{book.description}</p>
-              </div>
-            ))}
-          </div>
+      {/* Featured Books Section (Visible to all users) */}
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">Featured Books</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {featuredBooks.map((book) => (
+            <div key={book.id} className="bg-white shadow-lg rounded-lg p-6 transform hover:scale-105 transition">
+              <img src={book.image} alt={book.title} className="w-full h-56 object-contain rounded-md mb-4" />
+              <h3 className="text-2xl font-semibold">{book.title}</h3>
+              <p className="text-gray-500 text-md">by {book.author}</p>
+              <p className="text-gray-600 text-md mt-3">{book.description}</p>
+            </div>
+          ))}
+        </div>
+        {!isAuthenticated && (
           <div className="flex justify-center mt-10">
             <button
               onClick={() => navigate("/signup")}
@@ -66,10 +67,8 @@ const HomePage = () => {
               Sign Up to Explore More
             </button>
           </div>
-        </div>
-      ) : (
-        navigate("/all-books")
-      )}
+        )}
+      </div>
     </div>
   );
 };

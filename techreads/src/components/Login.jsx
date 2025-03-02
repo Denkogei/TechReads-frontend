@@ -3,7 +3,6 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-
 const Login = () => {
   const navigate = useNavigate();
 
@@ -25,12 +24,22 @@ const Login = () => {
         });
 
         const data = await response.json();
-if (response.ok) {
-  localStorage.setItem("token", data.access_token);
-  localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
-  navigate("/");
-  window.location.reload();
-}
+
+        if (response.ok) {
+          localStorage.setItem("token", data.access_token);
+          localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
+
+          // Check if the logged-in user is the admin
+          if (data.user.email === 'admin@gmail.com') {
+            navigate("/admin");  // Redirect to admin panel
+          } else {
+            navigate("/");  // Redirect to user dashboard
+          }
+
+          window.location.reload(); // Optional: To make sure the app reloads after login
+        } else {
+          setErrors({ email: "Invalid email or password" });
+        }
 
       } catch (error) {
         console.error("Login failed:", error);
@@ -60,7 +69,7 @@ if (response.ok) {
               <input
                 type="email"
                 name="email"
-                mailto:placeholder="you@example.com"
+                placeholder="you@example.com"
                 className="w-full bg-gray-100 outline-none ml-2"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -111,20 +120,6 @@ if (response.ok) {
             {formik.isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>
-
-        {/* <div className="flex items-center my-4">
-          <div className="flex-grow border-t border-gray-300"></div>
-          <span className="px-3 text-gray-500">Or</span>
-          <div className="flex-grow border-t border-gray-300"></div>
-        </div> */}
-
-        {/* <button
-          className="flex items-center justify-center w-full border py-2 rounded-lg text-gray-700 bg-white hover:bg-gray-100 shadow-sm"
-          onClick={() => loginWithRedirect()}
-        >
-          <FcGoogle className="text-xl mr-2" />
-          Login with Google
-        </button> */}
       </div>
     </div>
   );

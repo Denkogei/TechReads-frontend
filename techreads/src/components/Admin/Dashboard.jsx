@@ -1,11 +1,10 @@
 import { useState } from "react";
+import Sidebar from "./Sidebar"; // Import Sidebar
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { Link, useNavigate } from "react-router-dom";
-import { FaBars, FaBook, FaClipboardList, FaChartLine, FaSignOutAlt, FaTachometerAlt, FaUserShield, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaBook, FaClipboardList, FaChartLine, FaUserCircle } from "react-icons/fa";
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const navigate = useNavigate();
 
   const salesData = [
     { month: "Jan", revenue: 4000 },
@@ -22,55 +21,10 @@ const Dashboard = () => {
     { month: "Dec", revenue: 9000 },
   ];
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    navigate("/login");
-    window.location.reload(); // Refresh page to reflect logout
-  };
-
   return (
     <div className="flex h-screen bg-gray-100 overflow-hidden">
-      {/* Sidebar */}
-      <aside className={`w-64 bg-white p-6 flex flex-col justify-between transition-transform transform ${sidebarOpen ? "translate-x-0" : "-translate-x-64"} lg:translate-x-0 fixed lg:static h-full z-50`}>
-        <div>
-          {/* Admin Panel Title with Icon */}
-          <div className="flex items-center space-x-3 mb-6">
-            <FaUserShield className="text-blue-500 text-2xl" />
-            <h2 className="text-2xl font-bold text-gray-800">Admin Panel</h2>
-          </div>
-
-          {/* Navigation */}
-          <nav>
-            <ul className="space-y-4">
-              <li className="p-3 flex items-center space-x-3 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                <FaTachometerAlt className="text-blue-500" />
-                <Link to="/admin">Dashboard</Link>
-              </li>
-              <li className="p-3 flex items-center space-x-3 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                <FaBook className="text-green-500" />
-                <Link to="/admin/books">Books</Link>
-              </li>
-              <li className="p-3 flex items-center space-x-3 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                <FaClipboardList className="text-orange-500" />
-                <Link to="/admin/orders">Orders</Link>
-              </li>
-              <li className="p-3 flex items-center space-x-3 rounded-lg cursor-pointer hover:bg-gray-200 transition">
-                <FaChartLine className="text-red-500" />
-                <Link to="/admin/reports">Reports</Link>
-              </li>
-            </ul>
-          </nav>
-        </div>
-
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          className="p-3 flex items-center justify-center bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-        >
-          <FaSignOutAlt className="text-xl mr-2" /> Logout
-        </button>
-      </aside>
+      {/* Sidebar Component */}
+      <Sidebar sidebarOpen={sidebarOpen} />
 
       {/* Main Content */}
       <main className="flex-1 p-6 overflow-auto">
