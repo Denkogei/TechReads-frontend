@@ -1,5 +1,4 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Auth0Provider } from "@auth0/auth0-react";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ShoppingCart from "./components/ShoppingCart";
 import Signup from "./components/Signup";
@@ -14,42 +13,42 @@ import Logout from "./components/Logout";
 import Categories from "./components/Categories";
 import AllBooks from "./components/AllBooks";
 import Dashboard from "./components/Admin/Dashboard";
-import Footer from "./components/Footer";
 
+function AppLayout() {
+  const location = useLocation();
 
-const domain = "dev-yp43fewqn4xgjq06.us.auth0.com";
-const clientId = "ODsajv0GFDnBM8IPowpYz9aTLgJ3UYkP";
+  return (
+    <>
+      {/* Always show Navbar, regardless of admin or user */}
+      <Navbar />  
+
+      <Routes>
+        {/* User Routes */}
+        <Route path="/" element={<Homepage />} />
+        <Route path="/cart" element={<ShoppingCart />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/books/:id" element={<BookDetails />} />
+        <Route path="/wishlist" element={<WishList />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/all-books" element={<AllBooks />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/orders" element={<OrderHistory />} />
+
+        {/* Admin Routes */}
+        <Route path="/admin" element={<Dashboard />} />
+      </Routes>
+    </>
+  );
+}
 
 function App() {
   return (
-    <Auth0Provider
-      domain={domain}
-      clientId={clientId}
-      authorizationParams={{ redirect_uri: window.location.origin }}
-      cacheLocation="localstorage"
-      useRefreshTokens={true}
-    >
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-
-          <Route path="/cart" element={<ShoppingCart />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/books/:id" element={<BookDetails />} />
-          <Route path="/wishlist" element={<WishList />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/logout" element={<Logout />} />
-          <Route path="/all-books" element={<AllBooks />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/orders" element={<OrderHistory />} />
-          <Route path="/admin" element={<Dashboard />} /> {/* Admin Dashboard Route */}
-        </Routes>
-        <Footer />
-      </Router>
-    </Auth0Provider>
+    <Router>
+      <AppLayout />
+    </Router>
   );
 }
 
