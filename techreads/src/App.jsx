@@ -15,6 +15,7 @@ import AllBooks from "./components/AllBooks";
 import Dashboard from "./components/Admin/Dashboard";
 import BookManagement from "./components/Admin/BooksManagment";
 import Footer from "./components/Footer";
+import Orders from "./components/Admin/Orders";
 
 function AppLayout() {
   const location = useLocation();
@@ -42,6 +43,7 @@ function AppLayout() {
         {/* Admin Routes */}
         <Route path="/admin" element={<Dashboard />} />
         <Route path="/admin/books" element={<BookManagement />} />
+        <Route path="/admin/orders" element={<Orders />} />
       </Routes>
       <Footer />
     </>
