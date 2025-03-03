@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Sidebar from "./Sidebar"; // Import Sidebar
+import Sidebar from "./Sidebar"; 
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { FaBars, FaBook, FaClipboardList, FaChartLine, FaUserCircle } from "react-icons/fa";
 

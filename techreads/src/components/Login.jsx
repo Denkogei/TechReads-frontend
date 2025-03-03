@@ -23,24 +23,24 @@ const Login = () => {
           body: JSON.stringify(values),
         });
 
-        const data = await response.json();
-
-        if (response.ok) {
-          localStorage.setItem("token", data.access_token);
-          localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
-
-          // Check if the logged-in user is the admin
-          if (data.user.email === 'admin@gmail.com') {
-            navigate("/admin");  // Redirect to admin panel
-          } else {
-            navigate("/");  // Redirect to user dashboard
-          }
-
-          window.location.reload(); // Optional: To make sure the app reloads after login
-        } else {
-          setErrors({ email: "Invalid email or password" });
+        if (!response.ok) {
+          const errorData = await response.json(); // Parse error response
+          throw new Error(errorData.error || 'Login failed');
         }
 
+        const data = await response.json();
+
+        localStorage.setItem("token", data.access_token);
+        localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
+
+        // Check if the logged-in user is the admin
+        if (data.user.email === 'admin@gmail.com') {
+          navigate("/admin");  // Redirect to admin panel
+        } else {
+          navigate("/");  // Redirect to user dashboard
+        }
+
+        window.location.reload(); // Optional: To make sure the app reloads after login
       } catch (error) {
         console.error("Login failed:", error);
         setErrors({ email: "Invalid email or password" });
