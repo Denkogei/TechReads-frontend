@@ -1,11 +1,14 @@
+// Navbar.js
 import { FaHeart, FaShoppingCart, FaUser, FaSignOutAlt } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useGlobalState } from "./GlobalStateContext";
 
 const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isAdminPage = location.pathname.startsWith("/admin");
+  const { cart, wishlist } = useGlobalState(); // Access cart and wishlist states
 
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(
     !!localStorage.getItem("token")
@@ -52,11 +55,11 @@ const Navbar = () => {
                 </Link>
                 <Link to="/wishlist" className="flex items-center space-x-2 text-gray-700 hover:text-gray-600 transition">
                   <FaHeart className="text-xl" />
-                  <span className="text-sm">Wishlist</span>
+                  <span className="text-sm">Wishlist ({wishlist.length})</span>
                 </Link>
                 <Link to="/cart" className="flex items-center space-x-2 text-gray-700 hover:text-gray-600 transition">
                   <FaShoppingCart className="text-xl" />
-                  <span className="text-sm">Cart</span>
+                  <span className="text-sm">Cart ({cart.length})</span>
                 </Link>
                 <Link to="/profile" className="flex items-center space-x-2 text-gray-700 hover:text-gray-600 transition">
                   <FaUser className="text-xl" />
