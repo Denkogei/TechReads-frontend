@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
+import { useGlobalState } from "./GlobalStateContext"; // Import the global state context
+import { ToastContainer, toast } from "react-toastify"; // Import Toastify
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 const normalizeString = (str) => (str || '').trim().toLowerCase();
 
 function AllBooks() {
   const [books, setBooks] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
-  const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
@@ -37,6 +38,9 @@ function AllBooks() {
   ];
 
   const getToken = () => localStorage.getItem("token");
+
+  // Access global state functions and states
+  const { cart, wishlist, addToCart, addToWishlist, removeFromWishlist } = useGlobalState();
 
   useEffect(() => {
     const token = getToken();
@@ -71,6 +75,10 @@ function AllBooks() {
           }),
         ]);
 
+        if (!booksResponse.ok) throw new Error("Failed to fetch books");
+        if (!wishlistResponse.ok) throw new Error("Failed to fetch wishlist");
+        if (!cartResponse.ok) throw new Error("Failed to fetch cart");
+
         const booksData = await booksResponse.json();
         const wishlistData = await wishlistResponse.json();
         const cartData = await cartResponse.json();
@@ -82,7 +90,7 @@ function AllBooks() {
               (book.category || 'Uncategorized')
                 .split(',')
                 .map(c => normalizeString(c))
-            )
+          )
           )
         ].filter(c => c);
 
@@ -133,9 +141,13 @@ function AllBooks() {
       const searchMatch = normalizeString(book.title).includes(normalizeString(searchTerm));
       const priceMatch = book.price >= priceRange[0] && book.price <= priceRange[1];
       
-      return (selected.length === 0 || selected.some(cat => 
-        bookCategories.some(bc => bc.includes(cat))
-      )) && priceMatch && searchMatch;
+      return (
+        (selected.length === 0 || selected.some(cat => 
+          bookCategories.some(bc => bc.includes(cat))
+        )) && 
+        priceMatch && 
+        searchMatch
+      );
     })
     .sort((a, b) => {
       switch(sortBy) {
@@ -156,30 +168,22 @@ function AllBooks() {
       }
     });
 
-  const addToWishlist = async (bookId) => {
+  const handleAddToWishlist = async (bookId) => {
     const token = getToken();
     if (!token) return navigate("/login");
 
-    if (wishlist.includes(bookId)) return;
-
-    try {
-      const response = await fetch(`http://localhost:5000/wishlist/${bookId}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        setWishlist(prev => [...prev, bookId]);
-      }
-    } catch (error) {
-      console.error("Error adding to wishlist:", error);
+    if (wishlist.includes(bookId)) {
+      // If the book is already in the wishlist, remove it
+      removeFromWishlist(bookId);
+      toast.success("Removed from wishlist!"); // Toastify notification
+    } else {
+      // Otherwise, add it to the wishlist
+      addToWishlist(bookId);
+      toast.success("Added to wishlist!"); // Toastify notification
     }
   };
 
-  const addToCart = async (bookId) => {
+  const handleAddToCart = async (bookId) => {
     const token = getToken();
     if (!token) return navigate("/login");
 
@@ -195,16 +199,30 @@ function AllBooks() {
 
       const data = await response.json();
       if (response.ok) {
-        setCart(prev => [...prev, bookId]);
-        alert(data.message);
+        addToCart(bookId); // Update global cart state
+        toast.success("Added to cart!"); // Toastify notification
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
+      toast.error("Failed to add to cart!"); // Toastify notification
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col md:flex-row">
+      {/* Toastify Container */}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
       {/* Filters Sidebar */}
       <div className="w-full md:w-64 bg-white md:bg-gray-50 p-4 md:mr-6 mb-6 md:mb-0 rounded-lg shadow-sm border border-gray-100">
         <h3 className="text-lg font-semibold mb-4 text-gray-800">Filters</h3>
@@ -328,7 +346,7 @@ function AllBooks() {
                         className="py-2 px-4 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                         onClick={(e) => {
                           e.stopPropagation();
-                          addToCart(book.id);
+                          handleAddToCart(book.id);
                         }}
                       >
                         Add to Cart
@@ -336,7 +354,7 @@ function AllBooks() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          addToWishlist(book.id);
+                          handleAddToWishlist(book.id);
                         }}
                         className="p-2 flex items-center justify-center text-red-500 hover:bg-gray-100 rounded-lg transition-colors"
                       >

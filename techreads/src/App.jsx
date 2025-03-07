@@ -16,29 +16,28 @@ import Dashboard from "./components/Admin/Dashboard";
 import BookManagement from "./components/Admin/BooksManagment";
 import Footer from "./components/Footer";
 import Orders from "./components/Admin/Orders";
+import { GlobalStateProvider } from "./components/GlobalStateContext";
 
 function AppLayout() {
-  const location = useLocation();
+  const location = useLocation(); // This will work because AppLayout is rendered inside <Router>
 
   return (
     <>
-      {/* Always show Navbar, regardless of admin or user */}
-      <Navbar />  
-
+      <Navbar />
       <Routes>
         {/* User Routes */}
         <Route path="/" element={<Homepage />} />
-        <Route path="/cart" element={<ShoppingCart />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/books/:id" element={<BookDetails />} />
-        <Route path="/wishlist" element={<WishList />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/all-books" element={<AllBooks />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/orders" element={<OrderHistory />} />
+        <Route path="/cart" element={<ShoppingCart />} />
+        <Route path="/wishlist" element={<WishList />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<Dashboard />} />
@@ -53,7 +52,9 @@ function AppLayout() {
 function App() {
   return (
     <Router>
-      <AppLayout />
+      <GlobalStateProvider> {/* Wrap the entire app with GlobalStateProvider */}
+        <AppLayout />
+      </GlobalStateProvider>
     </Router>
   );
 }
