@@ -14,7 +14,6 @@ const Orders = () => {
       const token = localStorage.getItem("token");
 
       if (!token) {
-        console.error("No token found in localStorage");
         setError("User not authenticated");
         setLoading(false);
         return;
@@ -60,7 +59,7 @@ const Orders = () => {
 
     try {
       const response = await fetch(`http://localhost:5000/orders/${orderId}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -84,35 +83,42 @@ const Orders = () => {
         )
       );
 
-      alert(
-        `Order ${orderId} status updated to ${newStatus}. Email sent to user.`
-      );
+      alert(`Order ${orderId} status updated to ${newStatus}. Email sent.`);
     } catch (err) {
       console.error("Error updating status: ", err);
       setError("Error updating status. Check console.");
     }
   };
 
-  if (loading) return <p>Loading orders...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
-
   return (
-    <div className="flex">
+    <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
       <div className="p-6 w-full">
-        <h2 className="text-2xl font-bold mb-4">Orders</h2>
-        {orders.length === 0 ? (
-          <p>No orders found.</p>
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Orders</h2>
+
+        {loading && <p className="text-blue-500">Loading orders...</p>}
+        {error && (
+          <p className="text-red-500 bg-red-100 p-2 rounded">{error}</p>
+        )}
+
+        {orders.length === 0 && !loading ? (
+          <p className="text-gray-600 text-lg">No orders found.</p>
         ) : (
-          <ul>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {orders.map((order) => (
-              <li key={order.id} className="border-b py-2">
-                <p>Order ID: {order.id}</p>
-                <p>Status: {order.status}</p>
+              <div
+                key={order.id}
+                className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition duration-300"
+              >
+                <p className="text-gray-700 font-semibold">
+                  Order ID: {order.id}
+                </p>
+                <p className="text-gray-500">Status: {order.status}</p>
+
                 <select
                   value={order.status}
                   onChange={(e) => handleUpdateStatus(order.id, e.target.value)}
-                  className="mt-2"
+                  className="mt-3 w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400"
                 >
                   <option value="Pending">Pending</option>
                   <option value="Processing">Processing</option>
@@ -120,9 +126,9 @@ const Orders = () => {
                   <option value="Delivered">Delivered</option>
                   <option value="Cancelled">Cancelled</option>
                 </select>
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>
