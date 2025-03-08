@@ -41,9 +41,7 @@ const Sidebar = () => {
           </ul>
         </nav>
       </div>
-      <button onClick={handleLogout} className="p-3 flex items-center justify-center bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
-        <FaSignOutAlt className="text-xl mr-2" /> Logout
-      </button>
+     
     </aside>
   );
 };
