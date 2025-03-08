@@ -83,7 +83,9 @@ const Orders = () => {
         )
       );
 
-      alert(`Order ${orderId} status updated to ${newStatus}. Email sent.`);
+      alert(
+        `Your order ${orderId} status updated to ${newStatus}.  A confirmation email has been sent!`
+      );
     } catch (err) {
       console.error("Error updating status: ", err);
       setError("Error updating status. Check console.");
