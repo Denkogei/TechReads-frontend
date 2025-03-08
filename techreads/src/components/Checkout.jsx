@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import mpesaLogo from "../assets/mpesa-logo.png";
@@ -45,21 +45,30 @@ const Checkout = () => {
       alert("Please fill in all required fields correctly.");
       return;
     }
-
+  
     setIsProcessing(true);
+  
     try {
-      const response = await fetch("http://your-backend-url/api/mpesa/checkout", {
+      const response = await fetch("https://b500-102-67-153-2.ngrok-free.app/stkpush", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...deliveryDetails, totalAmount }),
+        body: JSON.stringify({
+          phone_number: deliveryDetails.phoneNumber.startsWith("254")
+            ? deliveryDetails.phoneNumber
+            : "254" + deliveryDetails.phoneNumber.slice(1),
+          amount: totalAmount,
+          order_id: Date.now().toString(),
+        }),
       });
-
+  
       const data = await response.json();
-      if (data.success) {
-        alert("Payment request sent. Approve it on your phone.");
-        navigate("/order-confirmation", { state: { orderDetails: data.order } });
+      console.log("Payment Response:", data);
+  
+      if (data.error) {
+        alert("Payment failed: " + data.error);
       } else {
-        alert("Payment failed. Try again.");
+        alert("Payment request sent. Approve it on your phone.");
+        navigate("/order-confirmation", { state: { orderDetails: data } });
       }
     } catch (error) {
       console.error("Payment error:", error);
@@ -68,6 +77,7 @@ const Checkout = () => {
       setIsProcessing(false);
     }
   };
+  
 
   return (
     <div className="max-w-2xl mx-auto mt-12 p-8 bg-white shadow-lg rounded-2xl border border-gray-200">
