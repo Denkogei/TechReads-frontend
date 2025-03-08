@@ -9,10 +9,11 @@ const Checkout = () => {
   const { selectedProduct, cartItems, finalAmount } = location.state || {};
 
   const [deliveryDetails, setDeliveryDetails] = useState({
-    name: "",
-    phoneNumber: "",
-    email: "",
-    address: "",
+     amount: "",
+     phone_number: "",
+     order_id: "1",
+    //  email: "",
+    //  address: "",
   });
   const [isValid, setIsValid] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -35,13 +36,13 @@ const Checkout = () => {
     setDeliveryDetails((prev) => ({ ...prev, [name]: value }));
 
     if (name === "phoneNumber") {
-      const safaricomRegex = /^(?:254|0)?7[0-9]{8}$/;
-      setIsValid(safaricomRegex.test(value));
+      const safaricomRegex = /^(?:\+254|254|0)7\d{8}$/;
+      setIsValid(safaricomRegex.test(value.trim()));
     }
   };
 
   const handlePlaceOrder = async () => {
-    if (!isValid || !deliveryDetails.name || !deliveryDetails.address || !deliveryDetails.email) {
+    if (!isValid || !deliveryDetails.name) {
       alert("Please fill in all required fields correctly.");
       return;
     }
@@ -49,6 +50,7 @@ const Checkout = () => {
     setIsProcessing(true);
   
     try {
+
       const response = await fetch("https://b500-102-67-153-2.ngrok-free.app/stkpush", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -60,7 +62,9 @@ const Checkout = () => {
           order_id: Date.now().toString(),
         }),
       });
+
   
+      console.log(response)
       const data = await response.json();
       console.log("Payment Response:", data);
   
@@ -109,7 +113,7 @@ const Checkout = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
-            { label: "Full Name", name: "name", type: "text", placeholder: "John Doe" },
+            { label: " Name", name: "name", type: "text", placeholder: "John Doe" },
             { label: "Phone Number", name: "phoneNumber", type: "text", placeholder: "07XX XXX XXX" },
             { label: "Email", name: "email", type: "email", placeholder: "example@mail.com" },
             { label: "Delivery Address", name: "address", type: "text", placeholder: "1234 Street, City" },

@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
-import { useGlobalState } from "./GlobalStateContext"; // Import the global state context
-import { ToastContainer, toast } from "react-toastify"; // Import Toastify
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const normalizeString = (str) => (str || '').trim().toLowerCase();
 
 function AllBooks() {
   const [books, setBooks] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
+  const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  // Filter states
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceRange, setPriceRange] = useState([3500, 10000]);
+  const [priceRange, setPriceRange] = useState([0, 10000]);
   const [sortBy, setSortBy] = useState('Popularity');
   const [availableCategories, setAvailableCategories] = useState([]);
 
@@ -31,16 +31,9 @@ function AllBooks() {
     "DevOps"
   ];
 
-  const sortOptions = [
-    "Popularity",
-    "Price: Low to High",
-    "Price: High to Low",
-  ];
+  const sortOptions = ["Popularity", "Price: Low to High", "Price: High to Low"];
 
   const getToken = () => localStorage.getItem("token");
-
-  // Access global state functions and states
-  const { cart, wishlist, addToCart, addToWishlist, removeFromWishlist } = useGlobalState();
 
   useEffect(() => {
     const token = getToken();
@@ -83,14 +76,19 @@ function AllBooks() {
         const wishlistData = await wishlistResponse.json();
         const cartData = await cartResponse.json();
 
-        // Extract categories from books
+        // Calculate dynamic price range
+        const prices = booksData.map(book => book.price);
+        const minPrice = Math.min(...prices);
+        const maxPrice = Math.max(...prices);
+
+        // Extract categories
         const bookCategories = [
           ...new Set(
             booksData.flatMap(book => 
               (book.category || 'Uncategorized')
                 .split(',')
                 .map(c => normalizeString(c))
-          )
+            )
           )
         ].filter(c => c);
 
@@ -100,6 +98,7 @@ function AllBooks() {
 
         setBooks(booksData);
         setAvailableCategories(mergedCategories);
+        setPriceRange([minPrice, maxPrice]);
         setWishlist(wishlistData.map((item) => item.book_id || item.id));
         setCart(cartData.map((item) => item.book_id || item.id));
       } catch (error) {
@@ -112,7 +111,6 @@ function AllBooks() {
     fetchData();
   }, [navigate]);
 
-  // Filter handlers
   const handleCategoryChange = (category) => {
     setSelectedCategories(prev => 
       prev.includes(category)
@@ -123,14 +121,13 @@ function AllBooks() {
 
   const handlePriceChange = (e) => {
     const value = parseInt(e.target.value);
-    setPriceRange([3500, value]);
+    setPriceRange([priceRange[0], value]);
   };
 
   const handleSortChange = (option) => {
     setSortBy(option);
   };
 
-  // Filtered and sorted books
   const filteredBooks = books
     .filter(book => {
       const bookCategories = (book.category || 'Uncategorized')
@@ -138,9 +135,17 @@ function AllBooks() {
         .map(c => normalizeString(c));
       
       const selected = selectedCategories.map(normalizeString);
-      const searchMatch = normalizeString(book.title).includes(normalizeString(searchTerm));
       const priceMatch = book.price >= priceRange[0] && book.price <= priceRange[1];
       
+      const searchTerms = normalizeString(searchTerm)
+        .split(/\s+/)
+        .filter(term => term.length > 0);
+      
+      const searchMatch = searchTerms.length === 0 || 
+        searchTerms.every(term => 
+          normalizeString(book.title).includes(term)
+        );
+
       return (
         (selected.length === 0 || selected.some(cat => 
           bookCategories.some(bc => bc.includes(cat))
@@ -157,33 +162,42 @@ function AllBooks() {
           return b.price - a.price;
         case 'Popularity':
         default: 
-          const aTitle = normalizeString(a.title);
-          const bTitle = normalizeString(b.title);
-          const search = normalizeString(searchTerm);
+          const searchTerms = normalizeString(searchTerm).split(/\s+/);
+          const aMatches = searchTerms.filter(term => 
+            normalizeString(a.title).includes(term)).length;
+          const bMatches = searchTerms.filter(term => 
+            normalizeString(b.title).includes(term)).length;
           
-          const aMatch = aTitle === search ? 2 : aTitle.includes(search) ? 1 : 0;
-          const bMatch = bTitle === search ? 2 : bTitle.includes(search) ? 1 : 0;
-          
-          return bMatch - aMatch || b.price - a.price;
+          return bMatches - aMatches || b.price - a.price;
       }
     });
 
-  const handleAddToWishlist = async (bookId) => {
+  const addToWishlist = async (bookId) => {
     const token = getToken();
     if (!token) return navigate("/login");
 
-    if (wishlist.includes(bookId)) {
-      // If the book is already in the wishlist, remove it
-      removeFromWishlist(bookId);
-      toast.success("Removed from wishlist!"); // Toastify notification
-    } else {
-      // Otherwise, add it to the wishlist
-      addToWishlist(bookId);
-      toast.success("Added to wishlist!"); // Toastify notification
+    if (wishlist.includes(bookId)) return;
+
+    try {
+      const response = await fetch(`http://localhost:5000/wishlist/${bookId}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setWishlist(prev => [...prev, bookId]);
+        toast.success("Added to wishlist successfully!");
+      }
+    } catch (error) {
+      console.error("Error adding to wishlist:", error);
+      toast.error("Failed to add to wishlist.");
     }
   };
 
-  const handleAddToCart = async (bookId) => {
+  const addToCart = async (bookId) => {
     const token = getToken();
     if (!token) return navigate("/login");
 
@@ -199,35 +213,21 @@ function AllBooks() {
 
       const data = await response.json();
       if (response.ok) {
-        addToCart(bookId); // Update global cart state
-        toast.success("Added to cart!"); // Toastify notification
+        setCart(prev => [...prev, bookId]);
+        toast.success("Added to cart successfully!");
       }
     } catch (error) {
       console.error("Error adding to cart:", error);
-      toast.error("Failed to add to cart!"); // Toastify notification
+      toast.error("Failed to add to cart.");
     }
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col md:flex-row">
-      {/* Toastify Container */}
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-
-      {/* Filters Sidebar */}
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
       <div className="w-full md:w-64 bg-white md:bg-gray-50 p-4 md:mr-6 mb-6 md:mb-0 rounded-lg shadow-sm border border-gray-100">
         <h3 className="text-lg font-semibold mb-4 text-gray-800">Filters</h3>
 
-        {/* Categories Filter */}
         <div className="mb-6">
           <h4 className="text-sm font-medium mb-3 text-gray-600">Categories</h4>
           <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -248,7 +248,6 @@ function AllBooks() {
           </div>
         </div>
 
-        {/* Price Range Filter */}
         <div className="mb-6">
           <h4 className="text-sm font-medium mb-3 text-gray-600">Price Range</h4>
           <div className="space-y-3">
@@ -258,8 +257,8 @@ function AllBooks() {
             </div>
             <input
               type="range"
-              min="3500"
-              max="10000"
+              min={priceRange[0]}
+              max={priceRange[1]}
               value={priceRange[1]}
               onChange={handlePriceChange}
               className="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
@@ -267,7 +266,6 @@ function AllBooks() {
           </div>
         </div>
 
-        {/* Sort Options */}
         <div className="mb-6">
           <h4 className="text-sm font-medium mb-3 text-gray-600">Sort By</h4>
           <div className="space-y-2">
@@ -290,7 +288,6 @@ function AllBooks() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1">
         <div className="mb-8 px-4">
           <h1 className="text-3xl font-bold text-gray-800 text-center mb-6">All Books</h1>
@@ -346,7 +343,7 @@ function AllBooks() {
                         className="py-2 px-4 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleAddToCart(book.id);
+                          addToCart(book.id);
                         }}
                       >
                         Add to Cart
@@ -354,7 +351,7 @@ function AllBooks() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleAddToWishlist(book.id);
+                          addToWishlist(book.id);
                         }}
                         className="p-2 flex items-center justify-center text-red-500 hover:bg-gray-100 rounded-lg transition-colors"
                       >
