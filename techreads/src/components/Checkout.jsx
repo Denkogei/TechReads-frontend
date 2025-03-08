@@ -9,11 +9,11 @@ const Checkout = () => {
   const { selectedProduct, cartItems, finalAmount } = location.state || {};
 
   const [deliveryDetails, setDeliveryDetails] = useState({
-     amount: "",
-     phone_number: "",
-     order_id: "1",
-    //  email: "",
-    //  address: "",
+    amount: "",
+    phone_number: "",
+    order_id: "1",
+    email: "",
+    address: "",
   });
   const [isValid, setIsValid] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
@@ -51,13 +51,13 @@ const Checkout = () => {
   
     try {
 
-      const response = await fetch("https://b500-102-67-153-2.ngrok-free.app/stkpush", {
+      const response = await fetch("https://a3aa-197-237-129-213.ngrok-free.app/mpesa/stkpush", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          phone_number: deliveryDetails.phoneNumber.startsWith("254")
-            ? deliveryDetails.phoneNumber
-            : "254" + deliveryDetails.phoneNumber.slice(1),
+          phone_number: deliveryDetails.phone_number.startsWith("254")
+            ? deliveryDetails.phone_number
+            : "254" + deliveryDetails.phone_number.slice(1),
           amount: totalAmount,
           order_id: Date.now().toString(),
         }),
