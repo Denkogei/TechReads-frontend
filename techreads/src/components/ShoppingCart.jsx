@@ -94,7 +94,7 @@ const Cart = () => {
 
   // Returns 0 if subtotal >= 5000, else returns 300.
   const getDeliveryFee = (subtotal) => {
-    return subtotal >= 5000 ? 0 : 300;
+    return subtotal >= 5000 ? 0 : 1;
   };
 
   const moveToWishlist = (item) => {
