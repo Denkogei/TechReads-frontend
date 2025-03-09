@@ -51,7 +51,7 @@ const Checkout = () => {
   
     try {
 
-      const response = await fetch("https://a3aa-197-237-129-213.ngrok-free.app/mpesa/stkpush", {
+      const response = await fetch("https://techreads-backend.onrender.com/mpesa/stkpush", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
