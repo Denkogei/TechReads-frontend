@@ -22,7 +22,7 @@ const Cart = () => {
       return;
     }
 
-    fetch(`http://localhost:5000/cart/${userId}`, {
+    fetch(`https://techreads-backend.onrender.com/cart/${userId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -61,7 +61,7 @@ const Cart = () => {
   const deleteCartItem = (itemId) => {
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:5000/cart/${itemId}`, {
+    fetch(`https://techreads-backend.onrender.com/cart/${itemId}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -99,7 +99,7 @@ const Cart = () => {
 
   const moveToWishlist = (item) => {
     const bookId = item.book_id || item.id;
-    fetch(`http://localhost:5000/wishlist/${bookId}`, {
+    fetch(`https://techreads-backend.onrender.com/wishlist/${bookId}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,

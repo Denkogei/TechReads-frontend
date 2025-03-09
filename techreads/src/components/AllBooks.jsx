@@ -57,13 +57,13 @@ function AllBooks() {
       setIsLoading(true);
       try {
         const [booksResponse, wishlistResponse, cartResponse] = await Promise.all([
-          fetch("http://localhost:5000/books", {
+          fetch("https://techreads-backend.onrender.com/books", {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch("http://localhost:5000/wishlist", {
+          fetch("https://techreads-backend.onrender.com/wishlist", {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch(`http://localhost:5000/cart/${userId}`, {
+          fetch(`https://techreads-backend.onrender.com/cart/${userId}`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -179,7 +179,7 @@ function AllBooks() {
     if (wishlist.includes(bookId)) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/wishlist/${bookId}`, {
+      const response = await fetch(`https://techreads-backend.onrender.com/wishlist/${bookId}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -202,7 +202,7 @@ function AllBooks() {
     if (!token) return navigate("/login");
 
     try {
-      const response = await fetch(`http://localhost:5000/cart/${bookId}`, {
+      const response = await fetch(`https://techreads-backend.onrender.com/cart/${bookId}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
