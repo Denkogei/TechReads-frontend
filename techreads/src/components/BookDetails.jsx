@@ -18,7 +18,7 @@ function BookDetails() {
       return;
     }
 
-    fetch(`http://localhost:5000/books/${id}`, {
+    fetch(`https://techreads-backend.onrender.com/books/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ function BookDetails() {
 
   const addToCart = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/cart/${id}`, {
+      const response = await fetch(`https://techreads-backend.onrender.com/cart/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +69,7 @@ function BookDetails() {
 
   const handleWishlist = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/wishlist/${id}`, {
+      const response = await fetch(`https://techreads-backend.onrender.com/wishlist/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

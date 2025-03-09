@@ -14,7 +14,7 @@ const Wishlist = () => {
       return;
     }
 
-    fetch("http://localhost:5000/wishlist", {
+    fetch("https://techreads-backend.onrender.com/wishlist", {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const Wishlist = () => {
   const removeItem = (id) => {
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:5000/wishlist/${id}`, {
+    fetch(`https://techreads-backend.onrender.com/wishlist/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -63,7 +63,7 @@ const Wishlist = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:5000/cart/${item.book_id}`, {
+      const response = await fetch(`https://techreads-backend.onrender.com/cart/${item.book_id}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

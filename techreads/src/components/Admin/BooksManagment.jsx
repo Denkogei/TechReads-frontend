@@ -56,8 +56,8 @@ const BookManagement = () => {
       validateForm();
 
       const url = formMode === 'add' 
-        ? "http://localhost:5000/books" 
-        : `http://localhost:5000/books/${currentBook.id}`;
+        ? "https://techreads-backend.onrender.com/books" 
+        : `https://techreads-backend.onrender.com/books/${currentBook.id}`;
       
       const method = formMode === 'add' ? 'POST' : 'PATCH';
 
@@ -128,7 +128,7 @@ const BookManagement = () => {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`http://localhost:5000/books/${id}`, {
+      const response = await fetch(`https://techreads-backend.onrender.com/books/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -161,10 +161,10 @@ const BookManagement = () => {
       try {
         const token = localStorage.getItem("token");
         const [booksRes, categoriesRes] = await Promise.all([
-          fetch("http://localhost:5000/books", {
+          fetch("https://techreads-backend.onrender.com/books", {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          fetch("http://localhost:5000/categories", {
+          fetch("https://techreads-backend.onrender.com/categories", {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
