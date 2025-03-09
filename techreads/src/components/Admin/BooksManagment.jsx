@@ -378,7 +378,7 @@ const BookManagement = () => {
                     </td>
                     <td className="px-4 py-3">{book.title}</td>
                     <td className="px-4 py-3">{book.author}</td>
-                    <td className="px-4 py-3">${parseFloat(book.price).toFixed(2)}</td>
+                    <td className="px-4 py-3">Ksh {parseFloat(book.price).toFixed(2)}</td>
                     <td className="px-4 py-3">{book.stock}</td>
                     <td className="px-4 py-3">{category?.name || 'N/A'}</td>
                     <td className="px-4 py-3 text-center">

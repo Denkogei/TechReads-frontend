@@ -1,46 +1,50 @@
 // GlobalStateContext.js
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useRef, useState, useCallback } from "react";
 
 const GlobalStateContext = createContext();
 
 export const GlobalStateProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]);
+  const cart = useRef([]);
+  const wishlist = useRef([]);
+  const [updateTrigger, setUpdateTrigger] = useState(0);
 
-  // Add an item to the cart
-  const addToCart = (book) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === book.id);
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item.id === book.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
-        return [...prevCart, { ...book, quantity: 1 }];
-      }
-    });
-  };
+  const forceUpdate = useCallback(() => setUpdateTrigger(prev => prev + 1), []);
 
-  // Add an item to the wishlist
-  const addToWishlist = (book) => {
-    setWishlist((prevWishlist) => {
-      if (!prevWishlist.some((item) => item.id === book.id)) {
-        return [...prevWishlist, book];
-      }
-      return prevWishlist;
-    });
-  };
+  const addToCart = useCallback((book) => {
+    const existingItem = cart.current.find((item) => item.id === book.id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.current.push({ ...book, quantity: 1 });
+    }
+    forceUpdate();
+  }, [forceUpdate]);
 
-  // Remove an item from the wishlist
-  const removeFromWishlist = (bookId) => {
-    setWishlist((prevWishlist) =>
-      prevWishlist.filter((item) => item.id !== bookId)
-    );
-  };
+  const addToWishlist = useCallback((book) => {
+    if (!wishlist.current.some((item) => item.id === book.id)) {
+      wishlist.current.push(book);
+      forceUpdate();
+    }
+  }, [forceUpdate]);
+
+  const removeFromWishlist = useCallback((bookId) => {
+    const index = wishlist.current.findIndex((item) => item.id === bookId);
+    if (index !== -1) {
+      wishlist.current.splice(index, 1);
+      forceUpdate();
+    }
+  }, [forceUpdate]);
 
   return (
     <GlobalStateContext.Provider
-      value={{ cart, wishlist, addToCart, addToWishlist, removeFromWishlist }}
+      value={{
+        cart: cart.current,
+        wishlist: wishlist.current,
+        updateTrigger,
+        addToCart,
+        addToWishlist,
+        removeFromWishlist
+      }}
     >
       {children}
     </GlobalStateContext.Provider>

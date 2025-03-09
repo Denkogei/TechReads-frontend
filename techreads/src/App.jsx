@@ -10,13 +10,13 @@ import Checkout from "./components/Checkout";
 import UserProfile from "./components/UserProfile";
 import OrderHistory from "./components/OrderHistory";
 import Logout from "./components/Logout";
-import Categories from "./components/Categories";
 import AllBooks from "./components/AllBooks";
 import Dashboard from "./components/Admin/Dashboard";
 import BookManagement from "./components/Admin/BooksManagment";
 import Footer from "./components/Footer";
 import Orders from "./components/Admin/Orders";
 import { GlobalStateProvider } from "./components/GlobalStateContext";
+import Reports from "./components/Admin/Reports";
 
 function AppLayout() {
   const location = useLocation(); // This will work because AppLayout is rendered inside <Router>
@@ -30,7 +30,6 @@ function AppLayout() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/books/:id" element={<BookDetails />} />
-        <Route path="/categories" element={<Categories />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/all-books" element={<AllBooks />} />
         <Route path="/checkout" element={<Checkout />} />
@@ -43,6 +42,7 @@ function AppLayout() {
         <Route path="/admin" element={<Dashboard />} />
         <Route path="/admin/books" element={<BookManagement />} />
         <Route path="/admin/orders" element={<Orders />} />
+        <Route path="/admin/reports" element={<Reports />} />
       </Routes>
       <Footer />
     </>
