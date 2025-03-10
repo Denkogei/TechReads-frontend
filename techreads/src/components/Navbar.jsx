@@ -8,7 +8,7 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isAdminPage = location.pathname.startsWith("/admin");
-  const { cart, wishlist } = useGlobalState(); // Access cart and wishlist states
+  const { cart, wishlist } = useGlobalState(); 
 
   const [isUserAuthenticated, setIsUserAuthenticated] = useState(
     !!localStorage.getItem("token")
@@ -19,10 +19,10 @@ const Navbar = () => {
       setIsUserAuthenticated(!!localStorage.getItem("token"));
     };
 
-    checkAuth(); // Ensure it runs immediately
+    checkAuth(); 
     window.addEventListener("storage", checkAuth);
     return () => window.removeEventListener("storage", checkAuth);
-  }, [location.pathname]); // Re-run when route changes
+  }, [location.pathname]); 
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -31,7 +31,7 @@ const Navbar = () => {
     setIsUserAuthenticated(false);
     navigate("/login");
 
-    setTimeout(() => window.location.reload(), 100); // Ensure full state reset
+    setTimeout(() => window.location.reload(), 100); 
   };
 
   return (
@@ -67,7 +67,7 @@ const Navbar = () => {
                 </Link>
               </>
             )}
-            {/* Logout button for both admin and user pages */}
+           
             <button
               onClick={handleLogout}
               className="flex items-center space-x-2 text-gray-700 hover:text-gray-600 transition"

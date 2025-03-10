@@ -28,8 +28,8 @@ const featuredBooks = [
 const HomePage = () => {
   const navigate = useNavigate();
 
-  // Check if the user is authenticated by checking for a token in localStorage
-  const isAuthenticated = !!localStorage.getItem("token"); // Returns true if token exists
+  
+  const isAuthenticated = !!localStorage.getItem("token"); 
 
   return (
     <div className="bg-gray-50 min-h-screen">

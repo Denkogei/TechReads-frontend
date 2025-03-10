@@ -19,7 +19,7 @@ import { GlobalStateProvider } from "./components/GlobalStateContext";
 import Reports from "./components/Admin/Reports";
 
 function AppLayout() {
-  const location = useLocation(); // This will work because AppLayout is rendered inside <Router>
+  const location = useLocation(); 
 
   return (
     <>
@@ -52,7 +52,7 @@ function AppLayout() {
 function App() {
   return (
     <Router>
-      <GlobalStateProvider> {/* Wrap the entire app with GlobalStateProvider */}
+      <GlobalStateProvider> 
         <AppLayout />
       </GlobalStateProvider>
     </Router>

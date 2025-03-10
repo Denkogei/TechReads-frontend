@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaHistory } from "react-icons/fa";
 
-// OrderHistory component for displaying orders with inner card animation
+
 const OrderHistory = ({ orders, loading, error }) => {
   if (loading) return <p className="text-gray-600">Loading orders...</p>;
   if (error) return <p className="text-red-600">{error}</p>;
@@ -48,7 +48,7 @@ const UserProfile = () => {
 
   const getToken = () => localStorage.getItem("token");
 
-  // Retrieve user data from localStorage
+ 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -56,7 +56,7 @@ const UserProfile = () => {
     }
   }, []);
 
-  // Fetch orders from the backend
+ 
   useEffect(() => {
     const token = getToken();
     if (!token) {

@@ -93,7 +93,7 @@ const Cart = () =>
     );
   };
 
-  // Returns 0 if subtotal >= 5000, else returns 300.
+  
   const getDeliveryFee = (subtotal) => {
     return subtotal >= 5000 ? 0 : 1;
   };
@@ -111,18 +111,18 @@ const Cart = () =>
         if (!response.ok) {
           throw new Error("Error moving item to wishlist.");
         }
-        // On success, remove the item from the cart.
+       
         deleteCartItem(item.id);
       })
       .catch((error) => console.error("Error adding to wishlist:", error));
   };
 
-  // Global checkout: calculates totals and navigates to the checkout page with all cart items.
+ 
   const handleCheckoutAll = () => {
     const subtotal = calculateTotal();
     const deliveryFee = getDeliveryFee(subtotal);
     const finalAmount = subtotal + deliveryFee;
-    // Save the final amount in localStorage if needed.
+   
     localStorage.setItem("finalAmount", finalAmount);
     navigate("/checkout", {
       state: {

@@ -24,23 +24,23 @@ const Login = () => {
         });
 
         if (!response.ok) {
-          const errorData = await response.json(); // Parse error response
+          const errorData = await response.json(); 
           throw new Error(errorData.error || 'Login failed');
         }
 
         const data = await response.json();
 
         localStorage.setItem("token", data.access_token);
-        localStorage.setItem("user", JSON.stringify(data.user)); // Store user info
+        localStorage.setItem("user", JSON.stringify(data.user)); 
 
-        // Check if the logged-in user is the admin
+       
         if (data.user.email === 'admin@gmail.com') {
-          navigate("/admin");  // Redirect to admin panel
+          navigate("/admin");  
         } else {
-          navigate("/");  // Redirect to user dashboard
+          navigate("/"); 
         }
 
-        window.location.reload(); // Optional: To make sure the app reloads after login
+        window.location.reload();
       } catch (error) {
         console.error("Login failed:", error);
         setErrors({ email: "Invalid email or password" });
