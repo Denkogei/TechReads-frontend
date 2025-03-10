@@ -126,7 +126,7 @@ const UserProfile = () => {
         </nav>
       </aside>
 
-      {/* Main Content Area */}
+      {/*  Content Area */}
       <main className="flex-1 p-6">
         {activeTab === "profile" && (
           <div className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-10 rounded-2xl shadow-lg max-w-4xl mx-auto">

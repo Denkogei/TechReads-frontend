@@ -8,7 +8,6 @@ import BookDetails from "./components/BookDetails";
 import WishList from "./components/WishList";
 import Checkout from "./components/Checkout";
 import UserProfile from "./components/UserProfile";
-import OrderHistory from "./components/OrderHistory";
 import Logout from "./components/Logout";
 import AllBooks from "./components/AllBooks";
 import Dashboard from "./components/Admin/Dashboard";
