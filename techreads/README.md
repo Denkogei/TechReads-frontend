@@ -50,7 +50,7 @@ To run the project locally, one will need:
 2. Open your terminal and enter git clone `git@github.com:Denkogei/TechReads-backend.git`
 3. Enter cd and the name of the file.
 4. Run pipenv install and pipenv shell to download your backend dependencies and enter your virtual enviroment.
-5. To run the flask, type `flask run` in your terminal.
+5. To run the flask application, type `flask run` in your terminal.
 
 ## Contacts
 Below you can find the contacts of the people who worked on this incase you need support
